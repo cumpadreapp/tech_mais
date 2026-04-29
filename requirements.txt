@@ -4,4 +4,4 @@ Flask-Login==0.6.2
 python-dotenv==1.0.0
 Werkzeug==2.3.7
 SQLAlchemy==2.0.19
-Pillow==10.3.0
+Pillow>=11.0.0
