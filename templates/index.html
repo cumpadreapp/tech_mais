@@ -1,0 +1,375 @@
+{% extends "base.html" %}
+
+{% block title %}Tech Mais - Inovação e Tecnologia{% endblock %}
+
+{% block content %}
+<!-- Banner Principal - Fixo (parallax) ao rolar -->
+<div class="banner-fixo" 
+     style="background: url('{% if banner and banner.image_url %}{{ banner.image_url }}{% else %}https://via.placeholder.com/1920x400/2ecc71/ffffff?text=Tech+Mais{% endif %}') center/cover no-repeat fixed; height: 400px;">
+    <div class="overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.3);"></div>
+</div>
+
+<!-- Posts - Grandes e Vistosos -->
+<div id="posts" class="container my-5">
+    <div class="row">
+        {% if posts %}
+            {% for post in posts %}
+            <div class="col-12 mb-5" data-aos="fade-up">
+                <div class="post-card-super">
+                    <!-- Cabeçalho do Post -->
+                    <div class="post-header">
+                        <div class="post-category">
+                            <i class="fas fa-microphone-alt"></i> Destaque
+                        </div>
+                        <h2 class="post-title">{{ post.title }}</h2>
+                        <div class="post-meta">
+                            <span><i class="far fa-calendar-alt"></i> {{ post.formatted_date }}</span>
+                            <span><i class="fas fa-eye"></i> 1.234 visualizações</span>
+                            <span><i class="fas fa-heart"></i> 456 curtidas</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Conteúdo do Post -->
+                    <div class="post-body">
+                        <div class="post-content-large">
+                            <p>{{ post.content }}</p>
+                        </div>
+                        
+                        <!-- Vídeo YouTube -->
+                        {% if post.post_type == 'youtube' and post.youtube_id %}
+                        <div class="post-media">
+                            <div class="ratio ratio-16x9">
+                                <iframe src="https://www.youtube.com/embed/{{ post.youtube_id }}" 
+                                        frameborder="0" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Imagem -->
+                        {% if post.post_type == 'image' and post.media_url %}
+                        <div class="post-media">
+                            <img src="{{ post.media_url }}" class="img-fluid post-image" alt="{{ post.title }}">
+                            <div class="image-caption">{{ post.title }}</div>
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Vídeo Local -->
+                        {% if post.post_type == 'video' and post.media_url %}
+                        <div class="post-media">
+                            <div class="ratio ratio-16x9">
+                                <video controls poster="{{ url_for('static', filename='img/video-placeholder.jpg') }}">
+                                    <source src="{{ post.media_url }}" type="video/mp4">
+                                    Seu navegador não suporta vídeo.
+                                </video>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Rodapé com Compartilhamento -->
+                    <div class="post-footer">
+                        <div class="share-section">
+                            <strong class="share-label"><i class="fas fa-share-alt"></i> Compartilhar esta publicação:</strong>
+                            <div class="share-buttons-large">
+                                <a href="https://wa.me/?text={{ url_for('index', _external=true) }}" 
+                                   class="share-btn-large whatsapp" target="_blank">
+                                    <i class="fab fa-whatsapp"></i> WhatsApp
+                                </a>
+                                <a href="https://www.facebook.com/sharer/sharer.php?u={{ url_for('index', _external=true) }}" 
+                                   class="share-btn-large facebook" target="_blank">
+                                    <i class="fab fa-facebook"></i> Facebook
+                                </a>
+                                <a href="https://twitter.com/intent/tweet?url={{ url_for('index', _external=true) }}&text={{ post.title }}" 
+                                   class="share-btn-large twitter" target="_blank">
+                                    <i class="fab fa-twitter"></i> Twitter
+                                </a>
+                                <a href="https://www.instagram.com/" 
+                                   class="share-btn-large instagram" target="_blank">
+                                    <i class="fab fa-instagram"></i> Instagram
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12 text-center">
+                <div class="alert alert-info alert-lg">
+                    <i class="fas fa-info-circle fa-3x mb-3"></i>
+                    <h3>Nenhuma postagem ainda</h3>
+                    <p>Aguarde, em breve teremos novidades incríveis!</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Seção Sobre (Compacta) -->
+<div id="sobre" class="container my-5">
+    <div class="row align-items-center">
+        <div class="col-lg-6 mb-4" data-aos="fade-right">
+            <h2 class="display-5 fw-bold">Sobre o Tech Mais</h2>
+            <p class="lead">Somos uma plataforma dedicada a compartilhar conhecimento e inovação tecnológica.</p>
+            <p>Com uma abordagem moderna e dinâmica, buscamos trazer as melhores soluções e tendências do mundo digital para você, sempre mantendo a qualidade e relevância do conteúdo.</p>
+        </div>
+        <div class="col-lg-6" data-aos="fade-left">
+            <div class="card border-0 shadow-lg">
+                <div class="card-body p-5">
+                    <i class="fas fa-chart-line fa-3x text-primary mb-4"></i>
+                    <h3>Números que impressionam</h3>
+                    <div class="row mt-4">
+                        <div class="col-6 text-center">
+                            <h2 class="text-primary">{{ posts|length }}+</h2>
+                            <p>Posts Publicados</p>
+                        </div>
+                        <div class="col-6 text-center">
+                            <h2 class="text-primary">50k+</h2>
+                            <p>Visualizações</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Botão Admin Flutuante -->
+{% if not current_user.is_authenticated %}
+<a href="{{ url_for('admin_login') }}" class="admin-fab" title="Área Administrativa" data-aos="fade-up" data-aos-delay="300">
+    <i class="fas fa-crown fa-2x"></i>
+    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+        Admin
+    </span>
+</a>
+{% endif %}
+
+<style>
+    /* Banner Fixo */
+    .banner-fixo {
+        position: relative;
+        width: 100%;
+        background-attachment: fixed !important;
+        background-position: center !important;
+        background-repeat: no-repeat !important;
+        background-size: cover !important;
+        margin-bottom: 50px;
+    }
+    
+    /* Cards de Posts Grandes e Vistosos */
+    .post-card-super {
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        border-radius: 30px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border: 1px solid rgba(46, 204, 113, 0.2);
+    }
+    
+    .post-card-super:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+        border-color: var(--primary-green);
+    }
+    
+    .post-header {
+        padding: 30px 30px 20px;
+        background: linear-gradient(135deg, rgba(46, 204, 113, 0.05), rgba(52, 73, 94, 0.05));
+        border-bottom: 3px solid var(--primary-green);
+    }
+    
+    .post-category {
+        display: inline-block;
+        background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: bold;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .post-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--dark-gray);
+        margin-bottom: 15px;
+        line-height: 1.3;
+    }
+    
+    .post-meta {
+        display: flex;
+        gap: 20px;
+        color: #7f8c8d;
+        font-size: 0.9rem;
+        flex-wrap: wrap;
+    }
+    
+    .post-meta span {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    .post-body {
+        padding: 30px;
+    }
+    
+    .post-content-large {
+        font-size: 1.2rem;
+        line-height: 1.8;
+        color: #2c3e50;
+        margin-bottom: 30px;
+    }
+    
+    .post-content-large p {
+        margin-bottom: 20px;
+    }
+    
+    .post-media {
+        margin-top: 30px;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .post-image {
+        width: 100%;
+        transition: transform 0.3s ease;
+    }
+    
+    .post-image:hover {
+        transform: scale(1.02);
+    }
+    
+    .image-caption {
+        background: rgba(0,0,0,0.7);
+        color: white;
+        padding: 10px;
+        text-align: center;
+        font-size: 0.9rem;
+    }
+    
+    .post-footer {
+        padding: 20px 30px 30px;
+        border-top: 1px solid #e0e0e0;
+        background: #f8f9fa;
+    }
+    
+    .share-section {
+        text-align: center;
+    }
+    
+    .share-label {
+        display: block;
+        margin-bottom: 15px;
+        font-size: 1rem;
+        color: var(--dark-gray);
+    }
+    
+    .share-buttons-large {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .share-btn-large {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 25px;
+        border-radius: 50px;
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+    }
+    
+    .share-btn-large:hover {
+        transform: translateY(-3px);
+        color: white;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .share-btn-large.whatsapp { background: #25D366; }
+    .share-btn-large.facebook { background: #1877F2; }
+    .share-btn-large.twitter { background: #1DA1F2; }
+    .share-btn-large.instagram { background: linear-gradient(45deg, #f09433, #bc1888); }
+    
+    /* Responsividade */
+    @media (max-width: 768px) {
+        .banner-fixo {
+            height: 250px !important;
+            background-attachment: scroll !important;
+        }
+        
+        .post-title {
+            font-size: 1.8rem;
+        }
+        
+        .post-content-large {
+            font-size: 1rem;
+        }
+        
+        .post-header {
+            padding: 20px;
+        }
+        
+        .post-body {
+            padding: 20px;
+        }
+        
+        .post-footer {
+            padding: 15px 20px 20px;
+        }
+        
+        .share-btn-large {
+            padding: 8px 18px;
+            font-size: 0.9rem;
+        }
+        
+        .post-meta {
+            font-size: 0.8rem;
+            gap: 10px;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .banner-fixo {
+            height: 200px !important;
+        }
+        
+        .post-title {
+            font-size: 1.5rem;
+        }
+        
+        .share-buttons-large {
+            gap: 10px;
+        }
+        
+        .share-btn-large {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+        
+        .post-meta span {
+            font-size: 0.7rem;
+        }
+    }
+    
+    /* Alert grande */
+    .alert-lg {
+        padding: 60px 20px;
+        text-align: center;
+    }
+    
+    .alert-lg i {
+        display: block;
+        margin-bottom: 20px;
+    }
+</style>
+{% endblock %}

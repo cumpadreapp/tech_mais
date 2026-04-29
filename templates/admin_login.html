@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Login - Tech Mais{% endblock %}
+
+{% block extra_css %}
+<style>
+    .login-container {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+    
+    .login-card {
+        background: rgba(255,255,255,0.95);
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        overflow: hidden;
+        max-width: 450px;
+        width: 100%;
+    }
+    
+    .login-header {
+        background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+        color: white;
+        padding: 30px;
+        text-align: center;
+    }
+    
+    .login-body {
+        padding: 40px;
+    }
+    
+    .form-control {
+        border-radius: 10px;
+        padding: 12px;
+        border: 2px solid #e0e0e0;
+        transition: all 0.3s ease;
+    }
+    
+    .form-control:focus {
+        border-color: var(--primary-green);
+        box-shadow: 0 0 0 0.2rem rgba(46, 204, 113, 0.25);
+    }
+    
+    .btn-login {
+        background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+        border: none;
+        padding: 12px;
+        border-radius: 10px;
+        font-weight: bold;
+        font-size: 16px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-login:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+    }
+    
+    @media (max-width: 576px) {
+        .login-header {
+            padding: 20px;
+        }
+        
+        .login-header h2 {
+            font-size: 1.5rem;
+        }
+        
+        .login-body {
+            padding: 25px;
+        }
+        
+        .btn-login {
+            padding: 10px;
+            font-size: 14px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <div class="login-card" data-aos="zoom-in">
+        <div class="login-header">
+            <i class="fas fa-microchip fa-3x mb-3"></i>
+            <h2>Tech Mais Admin</h2>
+            <p class="mb-0">Faça login para acessar o painel</p>
+        </div>
+        <div class="login-body">
+            <form method="POST">
+                <div class="mb-4">
+                    <label for="username" class="form-label">
+                        <i class="fas fa-user"></i> Usuário
+                    </label>
+                    <input type="text" class="form-control" id="username" name="username" required 
+                           placeholder="Digite seu usuário">
+                </div>
+                <div class="mb-4">
+                    <label for="password" class="form-label">
+                        <i class="fas fa-lock"></i> Senha
+                    </label>
+                    <input type="password" class="form-control" id="password" name="password" required 
+                           placeholder="Digite sua senha">
+                </div>
+                <button type="submit" class="btn btn-primary w-100 btn-login">
+                    <i class="fas fa-sign-in-alt"></i> Entrar no Painel
+                </button>
+            </form>
+            <div class="mt-4 text-center">
+                <small class="text-muted">
+                    <i class="fas fa-shield-alt"></i> Área restrita - Apenas administradores
+                </small>
+                <div class="mt-2">
+                    <small class="text-muted">
+                        <i class="fas fa-key"></i> Credenciais padrão: admin / tech@admin2024
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
